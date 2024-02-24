@@ -3,7 +3,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -15,10 +14,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -58,7 +57,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sozlamalar.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -72,7 +70,6 @@ DATABASES = {
         'PORT': 5432
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -92,18 +89,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'uz-uz'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tashkent'
 
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -114,3 +109,89 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Health",
+
+    "site_header": "Health",
+
+    "site_brand": "Health",
+
+    "site_logo": None,
+
+    "login_logo": None,
+
+    "login_logo_dark": None,
+
+    "site_logo_classes": "img-circle",
+
+    "site_icon": None,
+
+    "welcome_sign": "Welcome to the Yec",
+
+    "copyright": "Health MCHJ",
+
+    "search_model": ['auth.User', 'health.User', 'health.Vakansiya', 'health.VakansiyaRU'],
+
+    "user_avatar": None,
+    "topmenu_links": [
+        {"name": "Home", "url": "admin:index",
+         "permissions": ["auth.view_user"]},
+
+        {"name": "Support", "url": "https://t.me/hvbibulloh", "new_window": True},
+
+        {"model": "auth.User"},
+
+        {"app": "health"},
+    ],
+
+    "usermenu_links": [
+        {"name": "Support", "url": "https://t.me/hvbibulloh", "new_window": True},
+        {"model": "auth.user"},
+    ],
+
+    "show_sidebar": True,
+
+    "navigation_expanded": True,
+
+    "hide_apps": [],
+
+    "hide_models": ['auth.Group'],
+
+    "order_with_respect_to": ["auth", "books", "books.author", "books.book"],
+
+    "custom_links": {
+        "books": [{
+            "name": "Make Messages",
+            "url": "make_messages",
+            "icon": "fas fa-comments",
+            "permissions": ["books.view_book"]
+        }]
+    },
+
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "products.Product": "fas fa-cube",
+        "products.Category": 'fas fa-tags',
+        "products.Subcategory": 'fas fa-folder-open'
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+
+    "related_modal_active": False,
+    "show_ui_builder": False,
+    "custom_css": None,
+    "custom_js": None,
+    "use_google_fonts_cdn": True,
+
+    "changeform_format": "vertical_tabs",
+    "changeform_format_overrides": {"auth.user": "collapsible", "health.Vakansiya": "vertical_tabs"},
+    "language_chooser": False,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "simplex",
+    "light_mode_theme": "light",
+}

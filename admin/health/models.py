@@ -55,7 +55,7 @@ class VakansiyaRU(models.Model):
 
     name = models.CharField(max_length=120, verbose_name="Название вакансии")
     description = models.TextField(null=True, blank=True, verbose_name="Информация о вакансии")
-    photo = models.ImageField(upload_to='media/vakansiya/', verbose_name="Rasm")
+    photo = models.ImageField(upload_to='media/vakansiya/', verbose_name="Фото")
     status = models.BooleanField(default=False, verbose_name="Статус Вакансии")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Время")
     question1 = models.CharField(max_length=150, verbose_name="1-й тестовый вопрос")

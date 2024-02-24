@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Vakansiya
+from .models import User, Vakansiya, VakansiyaRU
 
 
 @admin.register(User)
@@ -13,6 +13,15 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Vakansiya)
 class VakansiyaAdmin(admin.ModelAdmin):
+    list_display = ('name', 'status', 'created_at')
+    search_fields = ('name', 'status', 'created_at')
+    list_filter = ('name', 'status', 'created_at')
+    date_hierarchy = 'created_at'
+    ordering = ('-created_at',)
+
+
+@admin.register(VakansiyaRU)
+class VakansiyaAdminRu(admin.ModelAdmin):
     list_display = ('name', 'status', 'created_at')
     search_fields = ('name', 'status', 'created_at')
     list_filter = ('name', 'status', 'created_at')
