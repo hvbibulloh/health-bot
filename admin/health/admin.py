@@ -6,7 +6,7 @@ from .models import User, Vakansiya, VakansiyaRU
 class UserAdmin(admin.ModelAdmin):
     list_display = ('phone_number', 'full_name', 'city', 'created_at')
     search_fields = ('phone_number', 'city', 'full_name', 'created_at')
-    list_filter = ('phone_number', 'city', 'created_at')
+    list_filter = ( 'city', 'created_at')
     date_hierarchy = 'created_at'
     ordering = ('-created_at',)
 

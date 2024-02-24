@@ -57,3 +57,14 @@ malumotim = ReplyKeyboardMarkup(
         ]
     ], resize_keyboard=True
 )
+
+
+def vakansiya_uz_button():
+    vakansiya =  db.get_vakansiya_key()
+    btn = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, row_width=1)
+    orqaga = KeyboardButton("Chiqish")
+    btn.add(orqaga)
+    for i in vakansiya:
+        btn.add(f"{i[1]} 💼")
+
+    return btn

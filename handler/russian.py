@@ -3,7 +3,7 @@ from aiogram.dispatcher.storage import FSMContext
 import re
 from keyboard.default.menu_keyboard import menu
 from keyboard.default.russian import contact_ru, tuman_ru, malumotim_ru, chiqish_ru
-from loader import dp, bot
+from loader import dp, bot, db
 
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
@@ -113,3 +113,9 @@ async def til_bilishi(message: types.Message, state: FSMContext):
             data['tilbilishi'] = message.text
             await message.answer("Вакансии в нашей компании", reply_markup=menu)
             await state.finish()
+            phone_number = data['telefon']
+            full_name = data['ism']
+            birthday = data['sana']
+            city = data['tuman']
+            information = data['malumoti']
+            await db.create_user(phone_number, full_name, birthday, city, information, message.text)

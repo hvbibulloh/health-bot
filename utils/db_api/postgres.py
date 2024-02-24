@@ -11,9 +11,30 @@ class Database:
     def create_user(self, phone_number, full_name, date_of_birth, city, information, languages):
         try:
             self.cursor.execute(
-                "INSERT INTO health_user(phone_number, full_name, date_of_birth, city, information, languages) VALUES(%s, %s, %s, %s, %s, %s)",
+                "INSERT INTO health_user(phone_number, full_name, date_of_birth, city, information, languages, created_at) VALUES(%s, %s, %s, %s, %s, %s, NOW())",
                 (phone_number, full_name, date_of_birth, city, information, languages)
             )
             self.connection.commit()
         except Exception as e:
             print(f"Client Error: {e}")
+
+    async def get_vakansiya(self, name):
+        try:
+            self.cursor.execute(
+                "SELECT * FROM health_vakansiya WHERE name=%s",
+                (name,)
+            )
+            result = self.cursor.fetchone()
+            return result
+        except Exception as e:
+            print(f"Database Error: {e}")
+
+    async def get_vakansiya_key(self):
+        try:
+            self.cursor.execute(
+                "SELECT * FROM health_vakansiya"
+            )
+            result = self.cursor.fetchall()
+            return result if result else []
+        except Exception as e:
+            print(f"Database Error: {e}")
