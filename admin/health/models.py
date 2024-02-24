@@ -19,6 +19,10 @@ class User(models.Model):
     def __str__(self):
         return self.full_name
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+
 
 class Vakansiya(models.Model):
     class Answer(models.IntegerChoices):
@@ -74,3 +78,4 @@ class VakansiyaRU(models.Model):
 
     def __str__(self):
         return self.name
+
