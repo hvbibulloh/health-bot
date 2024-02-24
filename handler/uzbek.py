@@ -113,3 +113,4 @@ async def til_bilishi(message: types.Message, state: FSMContext):
             data['tilbilishi'] = message.text
             await message.answer("Kompaniyamizning bo'sh ish o'rinlari", reply_markup=menu)
             await state.finish()
+
