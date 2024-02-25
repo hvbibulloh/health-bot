@@ -2,6 +2,7 @@ from django.db import models
 
 
 class User(models.Model):
+    telegram_id = models.CharField(max_length=20, unique=True, verbose_name='Telegram ID')
     phone_number = models.CharField(max_length=15, unique=True, verbose_name='Telefon raqami')
     full_name = models.CharField(max_length=120, verbose_name='Ism va Familiya')
     date_of_birth = models.CharField(max_length=120, verbose_name="Tug'ulgan sana")

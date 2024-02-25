@@ -19,8 +19,13 @@ class Uzbek(StatesGroup):
 
 @dp.message_handler(text="O'zbek tili 🇺🇿")
 async def uzbek(message: types.Message):
-    await message.answer("Iltimos telefon raqamingizni kiriting ☎", reply_markup=contact_uz)
-    await Uzbek.telefon.set()
+    vakansiya_button = await vakansiya_uz_button()
+    user_id = await db.get_user(str(message.from_user.id))
+    if user_id:
+        await message.answer("Kompaniyamizning bo'sh ish o'rinlari", reply_markup=vakansiya_button)
+    else:
+        await message.answer("Iltimos telefon raqamingizni kiriting ☎", reply_markup=contact_uz)
+        await Uzbek.telefon.set()
 
 
 @dp.message_handler(state=Uzbek.telefon, content_types=types.ContentTypes.ANY)
@@ -110,12 +115,14 @@ async def til_bilishi(message: types.Message, state: FSMContext):
 
     else:
         async with state.proxy() as data:
+            vakansiya_button = await vakansiya_uz_button()
             data['tilbilishi'] = message.text
-            await message.answer("Kompaniyamizning bo'sh ish o'rinlari", reply_markup=vakansiya_uz_button())
+            await message.answer("Kompaniyamizning bo'sh ish o'rinlari", reply_markup=vakansiya_button)
             await state.finish()
             phone_number = data['telefon']
             full_name = data['ism']
             birthday = data['sana']
             city = data['tuman']
             information = data['malumoti']
-            await db.create_user(phone_number, full_name, birthday, city, information, message.text)
+            db.create_user(message.from_user.id, phone_number, full_name, birthday, city, information,
+                           message.text)
