@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.dispatcher.storage import FSMContext
 import re
 from keyboard.default.menu_keyboard import menu
-from keyboard.default.russian import contact_ru, tuman_ru, malumotim_ru, chiqish_ru
+from keyboard.default.russian import contact_ru, tuman_ru, malumotim_ru, chiqish_ru, vakansiya_ru_button
 from loader import dp, bot, db
 
 from aiogram.dispatcher.filters.state import State, StatesGroup
@@ -19,8 +19,14 @@ class Russian(StatesGroup):
 
 @dp.message_handler(text="Русский язык 🇧🇬")
 async def uzbek(message: types.Message):
-    await message.answer("Пожалуйста, введите свой номер телефона ☎", reply_markup=contact_ru)
-    await Russian.telefon.set()
+    vakansiya_button = await vakansiya_ru_button()
+    user_id = await db.get_user(str(message.from_user.id))
+    if user_id:
+        await message.answer("Kompaniyamizning bo'sh ish o'rinlari", reply_markup=vakansiya_button)
+
+    else:
+        await message.answer("Пожалуйста, введите свой номер телефона ☎", reply_markup=contact_ru)
+        await Russian.telefon.set()
 
 
 @dp.message_handler(state=Russian.telefon, content_types=types.ContentTypes.ANY)
@@ -110,12 +116,13 @@ async def til_bilishi(message: types.Message, state: FSMContext):
 
     else:
         async with state.proxy() as data:
+            vakansiya_button = await vakansiya_ru_button()
             data['tilbilishi'] = message.text
-            await message.answer("Вакансии в нашей компании", reply_markup=menu)
+            await message.answer("Вакансии в нашей компании", reply_markup=vakansiya_button)
             await state.finish()
             phone_number = data['telefon']
             full_name = data['ism']
             birthday = data['sana']
             city = data['tuman']
             information = data['malumoti']
-            await db.create_user(phone_number, full_name, birthday, city, information, message.text)
+            db.create_user(phone_number, full_name, birthday, city, information, message.text)

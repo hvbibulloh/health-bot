@@ -1,5 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
+from loader import db
+
 contact_ru = ReplyKeyboardMarkup(
     keyboard=[
         [
@@ -55,3 +57,14 @@ chiqish_ru = ReplyKeyboardMarkup(
         ]
     ], resize_keyboard=True
 )
+
+
+async def vakansiya_ru_button():
+    vakansiya = await db.get_vakansiya_keyru()
+    btn = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, row_width=1)
+    orqaga = KeyboardButton("Выход")
+    btn.add(orqaga)
+    for i in vakansiya:
+        btn.add(f"{i[1]} 💼")
+
+    return btn

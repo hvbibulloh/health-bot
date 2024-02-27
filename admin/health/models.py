@@ -3,7 +3,7 @@ from django.db import models
 
 class User(models.Model):
     telegram_id = models.CharField(max_length=20, unique=True, verbose_name='Telegram ID')
-    phone_number = models.CharField(max_length=15, unique=True, verbose_name='Telefon raqami')
+    phone_number = models.CharField(max_length=15, verbose_name='Telefon raqami')
     full_name = models.CharField(max_length=120, verbose_name='Ism va Familiya')
     date_of_birth = models.CharField(max_length=120, verbose_name="Tug'ulgan sana")
     city = models.CharField(max_length=120, verbose_name="Tumani")
@@ -11,6 +11,7 @@ class User(models.Model):
     languages = models.CharField(max_length=120, verbose_name="Til bilishi")
     description = models.TextField(blank=True, null=True, verbose_name="Adminlar kiritishi uchun malumot")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Ro'yxatdan o'tgan vaqti")
+    ball = models.CharField(max_length=120, verbose_name="Testdan to'plagan bali")
 
     class Meta:
         verbose_name = "Kondinantlar"

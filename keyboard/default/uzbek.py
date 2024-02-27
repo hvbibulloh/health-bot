@@ -68,3 +68,25 @@ async def vakansiya_uz_button():
         btn.add(f"{i[1]} 💼")
 
     return btn
+
+
+ishlamoq = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton("Ishlamoqchiman 🤝"),
+
+        ],
+        [
+            KeyboardButton("Orqaga 🔙")
+        ]
+    ], resize_keyboard=True
+)
+
+javobi = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton("Ha"),
+            KeyboardButton("Yo'q")
+        ]
+    ], resize_keyboard=True
+)
