@@ -29,8 +29,12 @@ class VakansiyaTest(StatesGroup):
 async def uzbek(message: types.Message):
     vakansiya_button = await vakansiya_uz_button()
     user_id = await db.get_user(str(message.from_user.id))
-    if user_id:
+    if user_id and user_id[-1] == None:
         await message.answer("Kompaniyamizning bo'sh ish o'rinlari", reply_markup=vakansiya_button)
+
+    elif user_id and user_id[-1]:
+        await message.answer("Sizning nomzodingiz ko'rib chiqilmoqda, ozgina kutishingizni so'raymiz ☺",
+                             reply_markup=menu)
     else:
         await message.answer("Iltimos telefon raqamingizni kiriting ☎", reply_markup=contact_uz)
         await Uzbek.telefon.set()
@@ -168,7 +172,6 @@ async def vakansiya_test1(message: types, state: FSMContext):
                 vakansiya_name = data["vakansiya_name"]
                 vakansiya = await db.get_vakansiya(vakansiya_name[:-2])
                 if vakansiya:
-                    print(vakansiya)
                     await message.answer(text="Iltimos savollarga e'tibor bilan javob bering 😊")
                     await bot.send_message(chat_id=message.chat.id, text=f"{vakansiya[6]}", reply_markup=javobi)
 
@@ -299,6 +302,7 @@ async def test4(message: types.Message, state: FSMContext):
                     await bot.send_message(chat_id=message.from_user.id,
                                            text="Javobingiz va sabringiz uchun rahmat tez orada siz bilan adminlarimiz bog'lanishadi 😊",
                                            reply_markup=menu)
+                    db.get_ball(str(message.from_user.id), str(data['ball']))
                     await state.finish()
 
                 elif vakansiya[13] == 1:
@@ -306,6 +310,7 @@ async def test4(message: types.Message, state: FSMContext):
                     await bot.send_message(chat_id=message.from_user.id,
                                            text="Javobingiz va sabringiz uchun rahmat tez orada siz bilan adminlarimiz bog'lanishadi 😊",
                                            reply_markup=menu)
+                    db.get_ball(str(message.from_user.id), str(data['ball']))
                     await state.finish()
         elif message.text == "Yo'q":
             async with state.proxy() as data:
@@ -316,13 +321,16 @@ async def test4(message: types.Message, state: FSMContext):
                     await bot.send_message(chat_id=message.from_user.id,
                                            text="Javobingiz va sabringiz uchun rahmat tez orada siz bilan adminlarimiz bog'lanishadi 😊",
                                            reply_markup=menu)
+                    db.get_ball(str(message.from_user.id), str(data['ball']))
                     await state.finish()
 
                 elif vakansiya[13] == 0:
                     await bot.send_message(chat_id=message.from_user.id,
                                            text="Javobingiz va sabringiz uchun rahmat tez orada siz bilan adminlarimiz bog'lanishadi 😊",
                                            reply_markup=menu)
+                    db.get_ball(str(message.from_user.id), str(data['ball']))
                     await state.finish()
 
     except Exception as e:
-        await message.answer("Qaytadan uruning !", reply_markup=javobi)
+        await message.answer("Qaytadan uruning !", reply_markup=menu)
+        await state.finish()

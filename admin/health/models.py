@@ -11,7 +11,7 @@ class User(models.Model):
     languages = models.CharField(max_length=120, verbose_name="Til bilishi")
     description = models.TextField(blank=True, null=True, verbose_name="Adminlar kiritishi uchun malumot")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Ro'yxatdan o'tgan vaqti")
-    ball = models.CharField(max_length=120, verbose_name="Testdan to'plagan bali")
+    ball = models.CharField(max_length=120, verbose_name="Testdan to'plagan bali", null=True, blank=True)
 
     class Meta:
         verbose_name = "Kondinantlar"
@@ -23,7 +23,6 @@ class User(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-
 
 
 class Vakansiya(models.Model):
@@ -81,3 +80,13 @@ class VakansiyaRU(models.Model):
     def __str__(self):
         return self.name
 
+
+class Media(models.Model):
+    name = models.CharField(max_length=500, verbose_name="Medianing nomi to'liq")
+    media = models.FileField(upload_to='media/media/', verbose_name="Media Video Rasm")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Vaqti")
+
+    class Meta:
+        verbose_name = "MEDIA"
+        verbose_name_plural = "MEDIAS"
+        ordering = ['-created_at']

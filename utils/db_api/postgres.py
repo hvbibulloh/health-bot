@@ -18,6 +18,18 @@ class Database:
         except Exception as e:
             print(f"Client Error: {e}")
 
+    def get_ball(self, telegram_id, ball):
+        try:
+            ball_str = str(ball)
+
+            self.cursor.execute(
+                "UPDATE health_user SET ball = %s WHERE telegram_id = %s",
+                (ball_str, telegram_id)
+            )
+            self.connection.commit()
+        except Exception as e:
+            print(f"Error updating ball: {e}")
+
     async def get_vakansiya(self, name):
         try:
             self.cursor.execute(
