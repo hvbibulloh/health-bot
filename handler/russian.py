@@ -30,12 +30,9 @@ class VakansiyaTest(StatesGroup):
 async def uzbek(message: types.Message):
     vakansiya_button = await vakansiya_ru_button()
     user_id = await db.get_user(str(message.from_user.id))
-    if user_id and user_id[-1] == None:
+    if user_id:
         await message.answer("Вакансии в нашей компании", reply_markup=vakansiya_button)
 
-    elif user_id and user_id[-1]:
-        await message.answer("Ваша кандидатура находится на рассмотрении, мы просим вас немного подождать ☺",
-                             reply_markup=menu)
     else:
         await message.answer("Пожалуйста, введите свой номер телефона ☎", reply_markup=contact_ru)
         await Russian.telefon.set()
@@ -155,8 +152,7 @@ async def vakansiya_send_ru(message: types.Message, state: FSMContext):
             await VakansiyaTest.test1.set()
 
 
-        else:
-            await bot.send_message(message.from_user.id, text="Такой вакансии не нашлось.")
+
 
 
 @dp.message_handler(state=VakansiyaTest.test1, content_types=types.ContentTypes.TEXT)

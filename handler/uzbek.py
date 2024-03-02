@@ -29,12 +29,9 @@ class VakansiyaTest(StatesGroup):
 async def uzbek(message: types.Message):
     vakansiya_button = await vakansiya_uz_button()
     user_id = await db.get_user(str(message.from_user.id))
-    if user_id and user_id[-1] == None:
+    if user_id:
         await message.answer("Kompaniyamizning bo'sh ish o'rinlari", reply_markup=vakansiya_button)
 
-    elif user_id and user_id[-1]:
-        await message.answer("Sizning nomzodingiz ko'rib chiqilmoqda, ozgina kutishingizni so'raymiz ☺",
-                             reply_markup=menu)
     else:
         await message.answer("Iltimos telefon raqamingizni kiriting ☎", reply_markup=contact_uz)
         await Uzbek.telefon.set()
