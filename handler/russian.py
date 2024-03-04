@@ -83,10 +83,37 @@ async def menuse_ru(message: types.Message, state: FSMContext):
             reply_markup=asosiy_menu_ru)
 
     else:
-        await bot.send_message(chat_id=message.from_user.id, text="Введите свое имя и фамилию 📝",
-                               reply_markup=types.ReplyKeyboardRemove())
+        await bot.send_message(chat_id=message.from_user.id, text="Введите свой номер телефона 📝",
+                               reply_markup=contact_ru)
 
-        await KondidantRu.ism.set()
+        await KondidantRu.telefon.set()
+
+
+
+@dp.message_handler(state=KondidantRu.telefon, content_types=types.ContentTypes.ANY)
+async def telefoni(message: types.Message, state: FSMContext):
+    try:
+        if message.contact:
+            async with state.proxy() as data:
+                data["telefon"] = message.contact.phone_number
+
+                await message.answer('Введите свое имя и фамилию 📝', reply_markup=types.ReplyKeyboardRemove())
+                await KondidantRu.ism.set()
+
+
+        elif re.match(r'^\+998[0-9]{9}$', message.text):
+            async with state.proxy() as data:
+                data["telefon"] = message.text
+                await message.answer('Введите свое имя и фамилию 📝', reply_markup=types.ReplyKeyboardRemove())
+                await KondidantRu.ism.set()
+
+        else:
+            raise ValueError('ERROR')
+
+    except:
+        await message.answer(
+            "Пожалуйста, введите номер телефона пример +998991234567 ! или нажмите кнопку отправить номер 😊",
+            reply_markup=contact_ru)
 
 
 @dp.message_handler(state=KondidantRu.ism, content_types=types.ContentTypes.TEXT)

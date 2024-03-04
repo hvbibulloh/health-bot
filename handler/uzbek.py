@@ -79,9 +79,33 @@ async def menuse(message: types.Message, state: FSMContext):
             "Siz Vakansiya bo'yicha o'z nomzodingizni qo'yib bo'ldingiz\n3 kundan so'ng sizga yana ro'yxatdan o'tishingizga ruxsat beriladi 😊",
             reply_markup=asosiy_menu)
     else:
-        await bot.send_message(chat_id=message.from_user.id, text="Ism Familiyangizni kiriting 📝",
-                               reply_markup=types.ReplyKeyboardRemove())
-        await Kondidant.ism.set()
+        await bot.send_message(chat_id=message.from_user.id, text="Telefon raqamingizni kiriting ",
+                               reply_markup=contact_uz)
+        await Kondidant.telefon.set()
+
+
+@dp.message_handler(state=Kondidant.telefon, content_types=types.ContentTypes.ANY)
+async def telefon(message: types.Message, state: FSMContext):
+    try:
+        if message.contact:
+            async with state.proxy() as data:
+                data["telefon"] = message.contact.phone_number
+
+                await message.answer("Ism Familiyangizni kiriting 📝", reply_markup=types.ReplyKeyboardRemove())
+                await Kondidant.ism.set()
+
+        elif re.match(r'^\+998[0-9]{9}$', message.text):
+            async with state.proxy() as data:
+                data["telefon"] = message.text
+                await message.answer("Ism Familiyangizni kiriting 📝", reply_markup=types.ReplyKeyboardRemove())
+                await Kondidant.ism.set()
+        else:
+            raise ValueError('ERROR')
+
+    except:
+        await message.answer(
+            "Iltimos telefon raqam kiriting misol +998991234567 ! yoki Raqam yuborish tugmasini bosing 😊",
+            reply_markup=contact_uz)
 
 
 @dp.message_handler(state=Kondidant.ism, content_types=types.ContentTypes.TEXT)
