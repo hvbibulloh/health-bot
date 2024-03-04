@@ -128,7 +128,7 @@ async def kondidant_ismi(message: types.Message, state: FSMContext):
 async def kondidant_sana(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['sana'] = message.text
-        await message.answer("Qaysi tumanda istiqomat qilasiz? 🏠", reply_markup=tuman_ru)
+        await message.answer("В каком районе вы живете? 🏠", reply_markup=tuman_ru)
         await KondidantRu.tumani.set()
 
 
@@ -136,7 +136,7 @@ async def kondidant_sana(message: types.Message, state: FSMContext):
 async def kondidant_tumana(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['tuman'] = message.text
-        await message.answer("Ma'lumotingizni kiriting yoki o'zingiz yozishingiz ham mumkin", reply_markup=malumotim_ru)
+        await message.answer("Введите свои данные или вы также можете написать свои собственные", reply_markup=malumotim_ru)
         await KondidantRu.malumoti.set()
 
 
