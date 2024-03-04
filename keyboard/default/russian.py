@@ -40,12 +40,9 @@ tuman_ru = ReplyKeyboardMarkup(
 malumotim_ru = ReplyKeyboardMarkup(
     keyboard=[
         [
-            KeyboardButton("Высокий"),
-            KeyboardButton("Средний"),
-            KeyboardButton("Стартер")
-        ],
-        [
-            KeyboardButton("Выход")
+            KeyboardButton("Высший"),
+            KeyboardButton("Средний (колледж-Лицей)"),
+            KeyboardButton("Началный (школа)")
         ]
     ], resize_keyboard=True
 )
@@ -62,8 +59,6 @@ chiqish_ru = ReplyKeyboardMarkup(
 async def vakansiya_ru_button():
     vakansiya = await db.get_vakansiya_keyru()
     btn = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, row_width=1)
-    orqaga = KeyboardButton("Выход")
-    btn.add(orqaga)
     for i in vakansiya:
         btn.add(f"{i[1]} 💼")
 
@@ -74,9 +69,6 @@ ishlamoq_ru = ReplyKeyboardMarkup(
     keyboard=[
         [
             KeyboardButton("Хочу работать 🤝")
-        ],
-        [
-            KeyboardButton("Назад 🔙")
         ]
     ], resize_keyboard=True
 )
@@ -89,3 +81,5 @@ javobi_ru = ReplyKeyboardMarkup(
         ]
     ], resize_keyboard=True
 )
+
+

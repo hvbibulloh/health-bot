@@ -38,9 +38,6 @@ tuman = ReplyKeyboardMarkup(
         [
             KeyboardButton("Yashnaobod tumani"),
             KeyboardButton("Yunusobod tumani")
-        ],
-        [
-            KeyboardButton("Chiqish")
         ]
     ], resize_keyboard=True
 )
@@ -51,9 +48,6 @@ malumotim = ReplyKeyboardMarkup(
             KeyboardButton("Oliy"),
             KeyboardButton("O'rta"),
             KeyboardButton("Boshlang'ich")
-        ],
-        [
-            KeyboardButton("Chiqish")
         ]
     ], resize_keyboard=True
 )
@@ -62,12 +56,9 @@ malumotim = ReplyKeyboardMarkup(
 async def vakansiya_uz_button():
     vakansiya = await db.get_vakansiya_key()
     btn = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, row_width=1)
-    orqaga = KeyboardButton("Chiqish")
-    btn.add(orqaga)
     for i in vakansiya:
         if i[4] == True:
             btn.add(f"{i[1]} 💼")
-
     return btn
 
 
@@ -76,9 +67,6 @@ ishlamoq = ReplyKeyboardMarkup(
         [
             KeyboardButton("Ishlamoqchiman 🤝"),
 
-        ],
-        [
-            KeyboardButton("Orqaga 🔙")
         ]
     ], resize_keyboard=True
 )

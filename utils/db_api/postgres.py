@@ -8,11 +8,11 @@ class Database:
                                            port=DB_PORT)
         self.cursor = self.connection.cursor()
 
-    def create_user(self, telegram_id, phone_number, full_name, date_of_birth, city, information, languages):
+    def create_user(self, telegram_id, phone_number, full_name, date_of_birth, city, information, languages, tajriba):
         try:
             self.cursor.execute(
-                "INSERT INTO health_user(telegram_id,phone_number, full_name, date_of_birth, city, information, languages, created_at) VALUES(%s, %s, %s, %s, %s, %s, %s, NOW())",
-                (telegram_id, phone_number, full_name, date_of_birth, city, information, languages)
+                "INSERT INTO health_user(telegram_id,phone_number, full_name, date_of_birth, city, information, languages, tajriba , created_at) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, NOW())",
+                (telegram_id, phone_number, full_name, date_of_birth, city, information, languages, tajriba)
             )
             self.connection.commit()
         except Exception as e:
@@ -82,3 +82,44 @@ class Database:
             return result
         except Exception as e:
             print(f"Database Error: {e}")
+
+    async def get_media(self):
+        try:
+            self.cursor.execute(
+                "SELECT * FROM health_media "
+            )
+            result = self.cursor.fetchone()
+            return result if result else []
+        except Exception as e:
+            print(f"Database Error: {e}")
+
+    async def okompaniya(self):
+        try:
+            self.cursor.execute(
+                "SELECT * FROM health_bizhaqimizda "
+            )
+            result = self.cursor.fetchone()
+            return result if result else []
+        except Exception as e:
+            print(f"Database Error: {e}")
+
+
+    async def okompaniyaru(self):
+        try:
+            self.cursor.execute(
+                "SELECT * FROM health_bizhaqimizdaru "
+            )
+            result = self.cursor.fetchone()
+            return result if result else []
+        except Exception as e:
+            print(f"Database Error: {e}")
+
+    def create_shikoyat(self, telegram_id, nickname, phone_number, about):
+        try:
+            self.cursor.execute(
+                "INSERT INTO health_taklif(telegram_id, nickname, phone_number, about, created_at) VALUES(%s, %s, %s, %s, NOW())",
+                (telegram_id, nickname, phone_number, about)
+            )
+            self.connection.commit()
+        except Exception as e:
+            print(f"Client Error: {e}")
