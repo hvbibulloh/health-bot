@@ -358,14 +358,22 @@ async def kontakt(message: types.Message):
 
 
 @dp.message_handler(text="О нас 🏢")
-async def okompany(message: types.Message):
-    company = await db.okompaniyaru()
+async def okompanyrus(message: types.Message):
+    company = await db.okompaniya()
     if company:
         file_path = f"{BASE}/admin/media/{company[2]}"
-        await message.answer_photo(photo=open(file_path, 'rb'),caption=company[1], reply_markup=website)
+        caption = company[1]
+
+        if len(caption) > 1024:
+            caption_parts = [caption[i:i + 1024] for i in range(0, len(caption), 1024)]
+            for part in caption_parts:
+                await message.answer_photo(photo=open(file_path, 'rb'), caption=part, reply_markup=websiteuz)
+        else:
+            await message.answer_photo(photo=open(file_path, 'rb'), caption=caption, reply_markup=websiteuz)
 
     else:
-        await message.answer("⌛ Нет ссылки ")
+        await message.answer("⌛ Нет ссылки")
+
 
 
 @dp.message_handler(text="Предложения и жалобы 🗣")

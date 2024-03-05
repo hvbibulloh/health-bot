@@ -364,11 +364,18 @@ async def okompany(message: types.Message):
     company = await db.okompaniya()
     if company:
         file_path = f"{BASE}/admin/media/{company[2]}"
+        caption = company[1]
 
-        await message.answer_photo(photo=open(file_path, 'rb'),caption=company[1], reply_markup=websiteuz)
+        if len(caption) > 1024:
+            caption_parts = [caption[i:i + 1024] for i in range(0, len(caption), 1024)]
+            for part in caption_parts:
+                await message.answer_photo(photo=open(file_path, 'rb'), caption=part, reply_markup=websiteuz)
+        else:
+            await message.answer_photo(photo=open(file_path, 'rb'), caption=caption, reply_markup=websiteuz)
 
     else:
         await message.answer("⌛ Malumot yo'q")
+
 
 
 @dp.message_handler(text="Taklif va shikoyatlar 🗣")
