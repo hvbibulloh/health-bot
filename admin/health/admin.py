@@ -38,13 +38,13 @@ class MediaAdmin(admin.ModelAdmin):
 
 @admin.register(BizHaqimizda)
 class BizHaqimizdaAdmin(admin.ModelAdmin):
-    list_display = ('name', 'status', 'created_at')
+    list_display = ('name', 'created_at')
     ordering = ('-created_at',)
 
 
 @admin.register(BizHaqimizdaRu)
 class BizHaqimizdaRuAdmin(admin.ModelAdmin):
-    list_display = ('name', 'status', 'created_at')
+    list_display = ('name', 'created_at')
     ordering = ('-created_at',)
 
 

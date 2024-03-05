@@ -364,13 +364,8 @@ async def okompany(message: types.Message):
     company = await db.okompaniya()
     if company:
         file_path = f"{BASE}/admin/media/{company[2]}"
-        if company[3] == 0:
-            await message.answer_video(video=open(file_path, 'rb'), caption=company[1],
-                                 reply_markup=websiteuz)
 
-        elif company[3] == 1:
-            await message.answer_photo(photo=open(file_path, 'rb'), caption=company[1],
-                                 reply_markup=websiteuz)
+        await message.answer_photo(photo=open(file_path, 'rb'),caption=company[1], reply_markup=websiteuz)
 
     else:
         await message.answer("⌛ Malumot yo'q")

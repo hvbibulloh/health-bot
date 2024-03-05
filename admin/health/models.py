@@ -99,13 +99,8 @@ class Media(models.Model):
 
 
 class BizHaqimizda(models.Model):
-    class Answer(models.IntegerChoices):
-        HA = 0, "Video"
-        YOQ = 1, "Rasm"
-
     name = models.TextField(verbose_name="Malumot kiriting")
-    media = models.FileField(upload_to='okompani/', verbose_name="Video yoki Rasm joylang")
-    status = models.IntegerField(choices=Answer.choices, default=Answer.HA, verbose_name="OPA BU YERGA ETIBOR BERING Yuqorida nima joyladingiz?")
+    media = models.ImageField(upload_to='okompani/', verbose_name="Rasm joylang")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Vaqti")
 
     class Meta:
@@ -115,13 +110,9 @@ class BizHaqimizda(models.Model):
 
 
 class BizHaqimizdaRu(models.Model):
-    class Answer(models.IntegerChoices):
-        HA = 0, "Видео"
-        YOQ = 1, "Фото"
 
     name = models.TextField(verbose_name="Введите ссылку")
-    media = models.FileField(upload_to='okompani/', verbose_name="Вставить видео или фото")
-    status = models.IntegerField(choices=Answer.choices, default=Answer.HA, verbose_name="OPA BU YERGA ETIBOR BERING Что вы разместили выше?")
+    media = models.ImageField(upload_to='okompani/', verbose_name="фото")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Время")
 
     class Meta:
