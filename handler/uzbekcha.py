@@ -369,7 +369,7 @@ async def okompany(message: types.Message):
                                  reply_markup=websiteuz)
 
         elif company[3] == 1:
-            await bot.send_video(chat_id=message.from_user.id, video=open(file_path, 'rb'), caption=company[1],
+            await bot.send_photo(chat_id=message.from_user.id, photo=open(file_path, 'rb'), caption=company[1],
                                  reply_markup=websiteuz)
 
     else:
