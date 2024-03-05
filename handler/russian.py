@@ -359,7 +359,7 @@ async def kontakt(message: types.Message):
 
 @dp.message_handler(text="О нас 🏢")
 async def okompanyrus(message: types.Message):
-    company = await db.okompaniya()
+    company = await db.okompaniyaru()
     if company:
         file_path = f"{BASE}/admin/media/{company[2]}"
         caption = company[1]
