@@ -337,7 +337,7 @@ async def russian_question4(message: types.Message, state: FSMContext):
                 await state.finish()
                 await message.answer_location(latitude=41.2159400, longitude=69.1895840)
                 await message.answer(
-                    "Республика Узбекистан, 111802,\nг. Ташкент, Янгиҳаётcкий р-н,\nУзгариш, ул, Навруз, д. 236а")
+                    "Республика Узбекистан, 111802,\nг. Ташкент, Янгиҳаётcкий р-н,\nУзгариш, ул, Навруз, д. 236а", reply_markup=asosiy_menu_ru)
 
                 text = f"Vakansiya: {data['resume_name']} \n1 - Savol {data['question1']} - {data['answer1']}\n2 - Savol {data['answer4']} - {data['answer2']}\n3 - Savol {data['question3']} - {data['answer3']}\n4 - Savol {data['question4']} - {data['answer4']}"
                 db.get_ball(str(message.chat.id), str(text))
