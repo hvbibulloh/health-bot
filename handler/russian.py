@@ -367,9 +367,9 @@ async def okompanyrus(message: types.Message):
         if len(caption) > 1024:
             caption_parts = [caption[i:i + 1024] for i in range(0, len(caption), 1024)]
             for part in caption_parts:
-                await message.answer_photo(photo=open(file_path, 'rb'), caption=part, reply_markup=websiteuz)
+                await message.answer_photo(photo=open(file_path, 'rb'), caption=part, reply_markup=website)
         else:
-            await message.answer_photo(photo=open(file_path, 'rb'), caption=caption, reply_markup=websiteuz)
+            await message.answer_photo(photo=open(file_path, 'rb'), caption=caption, reply_markup=website)
 
     else:
         await message.answer("⌛ Нет ссылки")
