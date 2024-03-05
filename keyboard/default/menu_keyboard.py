@@ -1,6 +1,18 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from loader import db
 
+admin_menu = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton("Русский язык 🇧🇬"),
+            KeyboardButton("O'zbek tili 🇺🇿")
+        ],
+        [
+            KeyboardButton("Yuborish 🎙")
+        ]
+    ], resize_keyboard=True
+)
+
 menu = ReplyKeyboardMarkup(
     keyboard=[
         [
