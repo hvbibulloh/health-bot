@@ -362,13 +362,14 @@ async def okompany(message: types.Message):
     company = await db.okompaniyaru()
     if company:
         file_path = f"{BASE}/admin/media/{company[2]}"
+        print(file_path)
         if company[3] == 0:
-            await bot.send_video(chat_id=message.from_user.id, video=open(file_path, 'rb'), caption=company[1],
-                                 reply_markup=website)
+            await message.answer_video(video=open(file_path, 'rb'), caption=company[1],
+                                       reply_markup=website)
 
         elif company[3] == 1:
-            await bot.send_photo(chat_id=message.from_user.id, photo=open(file_path, 'rb'), caption=company[1],
-                                 reply_markup=website)
+            await message.answer_photo(photo=open(file_path, 'rb'), caption=company[1],
+                                       reply_markup=website)
 
     else:
         await message.answer("⌛ Нет ссылки ")
