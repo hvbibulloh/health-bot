@@ -78,7 +78,7 @@ async def telefon_py(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Royxat.ism, content_types=types.ContentTypes.TEXT)
 async def ism_py(message: types.Message, state: FSMContext):
     try:
-        if message.text.isalpha():
+        if message.text:
             async with state.proxy() as data:
                 data["ism"] = message.text
             await message.answer("Tug'ulgan sanangizni kiriting 📅 01.01,1990")

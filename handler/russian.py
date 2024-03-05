@@ -77,7 +77,7 @@ async def russian_phone(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Registration.name, content_types=types.ContentTypes.TEXT)
 async def russian_name(message: types.Message, state: FSMContext):
     try:
-        if message.text.isalpha():
+        if message.text:
             async with state.proxy() as data:
                 data["name"] = message.text
             await message.answer("Введите дату вашего рождения 📅 Например, 01.01.1990")
@@ -332,7 +332,7 @@ async def russian_question4(message: types.Message, state: FSMContext):
                 else:
                     data['answer4'] = 1
                 await message.answer(
-                    f"За ваш ответ и терпение вас свяжутся с нашими администраторами в ближайшее время 😊",
+                    f"Спасибо\nза ваш ответ и терпение вас свяжутся с нашими администраторами в ближайшее время 😊",
                     reply_markup=javobi_ru)
                 await state.finish()
                 await message.answer_location(latitude=41.2159400, longitude=69.1895840)
