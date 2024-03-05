@@ -10,385 +10,346 @@ from loader import dp, bot, db, BASE
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 
-class Russian(StatesGroup):
-    telefon = State()
+class Registration(StatesGroup):
+    phone = State()
+    name = State()
+    birth_date = State()
+    region = State()
+    information = State()
+    experience = State()
+    language_proficiency = State()
+    send_resume = State()
+    question1 = State()
+    answer1 = State()
+    question2 = State()
+    question3 = State()
+    question4 = State()
 
 
-class KondidantRu(StatesGroup):
-    telefon = State()
-    ism = State()
-    sana = State()
-    tumani = State()
-    malumoti = State()
-    tajriba = State()
-    til_bilishi = State()
-    vakansiya_send = State()
-    test1 = State()
-    javob1 = State()
-    test2 = State()
-    test3 = State()
-    test4 = State()
-
-
-class TaklifRu(StatesGroup):
-    telefon = State()
+class Feedback(StatesGroup):
+    phone = State()
     about = State()
 
 
 @dp.message_handler(text="Русский язык 🇧🇬")
-async def uzbek(message: types.Message):
-    vakansiya_button = await vakansiya_ru_button()
-    user_id = await db.get_user(str(message.from_user.id))
-    if user_id:
-        await message.answer("Вакансии в нашей компании", reply_markup=asosiy_menu_ru)
-
-    else:
-        await message.answer("Пожалуйста, введите свой номер телефона ☎", reply_markup=contact_ru)
-        await Russian.telefon.set()
-
-
-@dp.message_handler(state=Russian.telefon, content_types=types.ContentTypes.ANY)
-async def telefoni(message: types.Message, state: FSMContext):
-    try:
-        if message.contact:
-            async with state.proxy() as data:
-                data["telefon"] = message.contact.phone_number
-
-                await message.answer('Выберите нужный раздел 🛎', reply_markup=asosiy_menu_ru)
-                await state.finish()
-
-
-        elif re.match(r'^\+998[0-9]{9}$', message.text):
-            async with state.proxy() as data:
-                data["telefon"] = message.text
-                await message.answer('Выберите нужный раздел 🛎', reply_markup=asosiy_menu_ru)
-                await state.finish()
-
-        else:
-            raise ValueError('ERROR')
-
-    except:
-        await message.answer(
-            "Пожалуйста, введите номер телефона пример +998991234567 ! или нажмите кнопку отправить номер 😊",
-            reply_markup=contact_ru)
+async def russian_start(message: types.Message):
+    await message.answer("Главное меню 🏡", reply_markup=asosiy_menu_ru)
 
 
 @dp.message_handler(text="Вакансии 💼")
-async def menuse_ru(message: types.Message, state: FSMContext):
-    vakansiya_button = await vakansiya_ru_button()
+async def russian_vacancy(message: types.Message):
     user_id = await db.get_user(str(message.from_user.id))
     if user_id:
         await message.answer(
-            "Вы закончили выдвигать свою кандидатуру на вакансию,\n вы можете снова выдвинуть свою кандидатуру через 3 дня",
+            "Вы уже зарегистрировали свои данные по вакансии\nЧерез 3 дня вам будет предоставлена возможность повторной регистрации 😊",
             reply_markup=asosiy_menu_ru)
 
     else:
-        await bot.send_message(chat_id=message.from_user.id, text="Введите свой номер телефона 📝",
-                               reply_markup=contact_ru)
-
-        await KondidantRu.telefon.set()
+        await message.answer("Введите ваш номер телефона ☎", reply_markup=contact_ru)
+        await Registration.phone.set()
 
 
-
-@dp.message_handler(state=KondidantRu.telefon, content_types=types.ContentTypes.ANY)
-async def telefoni(message: types.Message, state: FSMContext):
+@dp.message_handler(state=Registration.phone, content_types=types.ContentTypes.ANY)
+async def russian_phone(message: types.Message, state: FSMContext):
     try:
         if message.contact:
             async with state.proxy() as data:
-                data["telefon"] = message.contact.phone_number
+                data["phone"] = message.contact.phone_number
 
-                await message.answer('Введите свое имя и фамилию 📝', reply_markup=types.ReplyKeyboardRemove())
-                await KondidantRu.ism.set()
+                await message.answer("Введите ваше имя и фамилию 📝", reply_markup=types.ReplyKeyboardRemove())
+                await Registration.name.set()
 
-
-        elif re.match(r'^\+998[0-9]{9}$', message.text):
+        elif re.match(r"^\+998[0-9]{9}$", message.text):
             async with state.proxy() as data:
-                data["telefon"] = message.text
-                await message.answer('Введите свое имя и фамилию 📝', reply_markup=types.ReplyKeyboardRemove())
-                await KondidantRu.ism.set()
+                data["phone"] = message.text
+                await message.answer("Введите ваше имя и фамилию 📝", reply_markup=types.ReplyKeyboardRemove())
+                await Registration.name.set()
 
         else:
-            raise ValueError('ERROR')
+            raise ValueError("Ошибка")
 
     except:
         await message.answer(
-            "Пожалуйста, введите номер телефона пример +998991234567 ! или нажмите кнопку отправить номер 😊",
+            "Пожалуйста, введите номер телефона, например +998991234567! или нажмите кнопку Отправить номер 😊",
             reply_markup=contact_ru)
 
 
-@dp.message_handler(state=KondidantRu.ism, content_types=types.ContentTypes.TEXT)
-async def kondidant_ismi(message: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        data['ism'] = message.text
-        await message.answer("Введите дату своего рождения 📅 01.01.1990")
-        await KondidantRu.sana.set()
+@dp.message_handler(state=Registration.name, content_types=types.ContentTypes.TEXT)
+async def russian_name(message: types.Message, state: FSMContext):
+    try:
+        if message.text.isalpha():
+            async with state.proxy() as data:
+                data["name"] = message.text
+            await message.answer("Введите дату вашего рождения 📅 Например, 01.01.1990")
+            await Registration.birth_date.set()
+        else:
+            raise ValueError("Имя должно содержать только буквы!")
+    except ValueError as ve:
+        await message.answer(str(ve))
+    except Exception as e:
+        await message.answer("Произошла ошибка при отправке имени! Пожалуйста, отправьте еще раз.")
 
 
-@dp.message_handler(state=KondidantRu.sana, content_types=types.ContentTypes.TEXT)
-async def kondidant_sana(message: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        data['sana'] = message.text
-        await message.answer("В каком районе вы живете? 🏠", reply_markup=tuman_ru)
-        await KondidantRu.tumani.set()
+@dp.message_handler(state=Registration.birth_date, content_types=types.ContentTypes.TEXT)
+async def russian_birth_date(message: types.Message, state: FSMContext):
+    try:
+        async with state.proxy() as data:
+            data["birth_date"] = message.text
+        await message.answer("В каком регионе вы планируете работать? ", reply_markup=tuman_ru)
+        await Registration.region.set()
+    except Exception as e:
+        await message.answer(f" Произошла ошибка при отправке даты рождения! Пожалуйста, отправьте еще раз.")
 
 
-@dp.message_handler(state=KondidantRu.tumani, content_types=types.ContentTypes.TEXT)
-async def kondidant_tumana(message: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        data['tuman'] = message.text
-        await message.answer("Введите свои данные или вы также можете написать свои собственные", reply_markup=malumotim_ru)
-        await KondidantRu.malumoti.set()
-
-
-@dp.message_handler(state=KondidantRu.malumoti, content_types=types.ContentTypes.TEXT)
-async def kondidant_malumoti(message: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        data['malumoti'] = message.text
-        await message.answer(
-            "Какой у Вас опыт работы? ----\n- компания\n- должность\n- период работы\nПример: ООО 'Работа мечты', Кассир, 2015-2018.",
-            reply_markup=types.ReplyKeyboardRemove())
-        await KondidantRu.tajriba.set()
-
-
-@dp.message_handler(state=KondidantRu.tajriba, content_types=types.ContentTypes.TEXT)
-async def kondidant_tajriba(message: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        data['tajriba'] = message.text
-        await message.answer("Какие языки вы знаете? \n\nУзбекский, Русский, Английский \n\nв этом варианте напишите ✍",
-                             reply_markup=types.ReplyKeyboardRemove())
-        await KondidantRu.til_bilishi.set()
-
-
-@dp.message_handler(state=KondidantRu.til_bilishi, content_types=types.ContentTypes.TEXT)
-async def kondidant_til_bilishi(message: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        vakansiya_button = await vakansiya_ru_button()
-        data['tilbilishi'] = message.text
-        phone_number = data['telefon']
-        full_name = data['ism']
-        birthday = data['sana']
-        city = data['tuman']
-        information = data['malumoti']
-        tajriba = data['tajriba']
-        db.create_user(message.from_user.id, phone_number, full_name, birthday, city, information, message.text,
-                       tajriba)
-
-        await KondidantRu.vakansiya_send.set()
-
-        await message.answer("Вакансии в нашей компании", reply_markup=vakansiya_button)
-
-
-@dp.message_handler(state=KondidantRu.vakansiya_send, content_types=types.ContentTypes.TEXT)
-async def vakansiya_sende(message: types.Message, state: FSMContext):
-    if message.text == "Выход":
-        await message.answer("Главное Меню", reply_markup=asosiy_menu_ru)
-        await state.finish()
+@dp.message_handler(state=Registration.region, content_types=types.ContentTypes.TEXT)
+async def russian_region(message: types.Message, state: FSMContext):
+    if message.text:
+        async with state.proxy() as data:
+            data['region'] = message.text
+            await message.answer("Введите свою информацию или напишите ее сами ",
+                                 reply_markup=malumotim_ru)
+            await Registration.information.set()
 
     else:
-        async with state.proxy() as data:
-            data['vakansiya_name'] = message.text
-            vakansiya_name = message.text[:-2]
-            vakansiya = await db.get_vakansiyaru(vakansiya_name)
-            if vakansiya:
-                file_path = f"{BASE}/admin/media/{vakansiya[3]}"
-
-                await bot.send_photo(message.chat.id, photo=open(file_path, 'rb'), caption=vakansiya[2],
-                                     reply_markup=ishlamoq_ru)
-
-                await KondidantRu.test1.set()
+        await message.answer("Введите правильно, пожалуйста!")
 
 
-            else:
-                await bot.send_message(message.from_user.id, text="Такой вакансии не нашлось.")
-
-
-@dp.message_handler(state=KondidantRu.test1, content_types=types.ContentTypes.TEXT)
-async def vakansiya_test1(message: types, state: FSMContext):
+@dp.message_handler(state=Registration.information, content_types=types.ContentTypes.TEXT)
+async def russian_information(message: types.Message, state: FSMContext):
     try:
-        vakansiya_button = await vakansiya_ru_button()
-        if message.text == "Назад 🔙":
-            await message.answer(text="Вы на странице вакансии 📝", reply_markup=vakansiya_button)
-            await KondidantRu.vakansiya_send.set()
+        async with state.proxy() as data:
+            data['information'] = message.text
+            await message.answer(
+                "Какой у вас опыт работы? ----\n- компания\n- должность\n- срок службы\nПример: 'Dream Work' MCHJ, кассир, 2015-2018.",
+                reply_markup=types.ReplyKeyboardRemove())
+            await Registration.experience.set()
+
+    except Exception as e:
+        print(f" Исключение при {e}")
+
+
+@dp.message_handler(state=Registration.experience, content_types=types.ContentTypes.TEXT)
+async def russian_experience(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['experience'] = message.text
+        await message.answer("Какие языки вы знаете? \n\nУзбекский, Русский, Английский \n\nнапишите в этом формате ✍",
+                             reply_markup=types.ReplyKeyboardRemove())
+        await Registration.language_proficiency.set()
+
+
+@dp.message_handler(state=Registration.language_proficiency, content_types=types.ContentTypes.TEXT)
+async def russian_language_proficiency(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['language_proficiency'] = message.text
+        phone_number = data['phone']
+        full_name = data['name']
+        birthday = data['birth_date']
+        city = data['region']
+        information = data['information']
+        experience = data['experience']
+        language_proficiency = data['language_proficiency']
+        vacancy_button = await vakansiya_ru_button()
+        user = await db.get_user(str(message.from_user.id))
+        if user:
+            await message.answer("Свободные рабочие места в нашей компании ", reply_markup=vacancy_button)
+
+        else:
+            try:
+                db.create_user(telegram_id=str(message.from_user.id), phone_number=phone_number, full_name=full_name,
+                               date_of_birth=birthday, city=city, information=information, languages=message.text,
+                               tajriba=experience)
+                await message.answer("Свободные рабочие места в нашей компании", reply_markup=vacancy_button)
+                await Registration.send_resume.set()
+            except:
+                await message.answer("Ошибка", reply_markup=asosiy_menu_ru)
+                await state.finish()
+
+
+@dp.message_handler(state=Registration.send_resume, content_types=types.ContentTypes.TEXT)
+async def russian_send_resume(message: types.Message, state: FSMContext):
+    try:
+        if message.text == "Выход":
+            await message.answer("Главное меню", reply_markup=asosiy_menu_ru)
+            await state.finish()
 
         else:
             async with state.proxy() as data:
-                vakansiya_name = data["vakansiya_name"]
-                vakansiya = await db.get_vakansiyaru(vakansiya_name[:-2])
-                if vakansiya:
-                    await message.answer(text="Пожалуйста, отвечайте на вопросы внимательно 😊")
-                    await bot.send_message(chat_id=message.chat.id, text=f"{vakansiya[6]}", reply_markup=javobi_ru)
+                data['resume_name'] = message.text
+                resume_names = message.text[:-2]
+                resume = await db.get_vakansiyaru(resume_names)
+                if resume:
+                    file_path = f"{BASE}/admin/media/{resume[3]}"
 
-                    await KondidantRu.javob1.set()
+                    caption = resume[2] if resume[2] else None
+
+                    await message.answer_photo(photo=open(file_path, 'rb'), caption=caption, reply_markup=ishlamoq_ru)
+                    await Registration.question1.set()
+
+                else:
+                    await message.answer("Такого резюме не найдено")
+
+    except Exception as e:
+        await message.answer(f"Произошла ошибка: {e}")
 
 
-    except:
-        await message.answer(
-            "Ошибка появилась нажмите еще раз !",
-            reply_markup=menu)
+@dp.message_handler(state=Registration.question1, content_types=types.ContentTypes.TEXT)
+async def russian_question1(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        resume_name = data['resume_name']
+        resume = await db.get_vakansiyaru(resume_name[:-2])
+        if resume:
+            data['question1'] = resume[6]
+            await message.answer(f"{resume[6]}", reply_markup=javobi_ru)
+
+            await Registration.answer1.set()
+
+
+@dp.message_handler(state=Registration.answer1, content_types=types.ContentTypes.TEXT)
+async def russian_answer1(message: types.Message, state: FSMContext):
+    try:
+        if message.text == "Да":
+            async with state.proxy() as data:
+                resume_name = data['resume_name']
+                resume = await db.get_vakansiyaru(resume_name[:-2])
+                data['question2'] = resume[8]
+                if resume[7] == 0:
+                    data["answer1"] = 1
+
+                    await message.answer(f"{resume[8]}", reply_markup=javobi_ru)
+                    await Registration.question2.set()
+
+                elif resume[7] == 1:
+                    data["answer1"] = 0
+                    await message.answer(f"{resume[8]}", reply_markup=javobi_ru)
+                    await Registration.question2.set()
+
+        elif message.text == "Нет":
+            async with state.proxy() as data:
+                resume_name = data['resume_name']
+                resume = await db.get_vakansiyaru(resume_name[:-2])
+                data['question2'] = resume[8]
+                if resume[7] == 1:
+                    data["answer1"] = 1
+                    await message.answer(f"{resume[8]}", reply_markup=javobi_ru)
+                    await Registration.question2.set()
+
+                elif resume[7] == 0:
+                    data["answer1"] = 0
+                    await message.answer(f"{resume[8]}", reply_markup=javobi_ru)
+                    await Registration.question2.set()
+
+    except Exception as e:
+        await message.answer("Повторите запрос!", reply_markup=javobi_ru)
+
+
+@dp.message_handler(state=Registration.question2, content_types=types.ContentTypes.TEXT)
+async def russian_question2(message: types.Message, state: FSMContext):
+    try:
+        if message.text == "Да":
+            async with state.proxy() as data:
+                resume_name = data['resume_name']
+                resume = await db.get_vakansiyaru(resume_name[:-2])
+                data['question3'] = resume[10]
+                if resume[9] == 0:
+                    data["answer2"] = 1
+
+                    await message.answer(f"{resume[10]}", reply_markup=javobi_ru)
+                    await Registration.question3.set()
+
+                elif resume[9] == 1:
+                    data["answer2"] = 0
+                    await message.answer(f"{resume[10]}", reply_markup=javobi_ru)
+                    await Registration.question3.set()
+
+        elif message.text == "Нет":
+            async with state.proxy() as data:
+                resume_name = data['resume_name']
+                resume = await db.get_vakansiyaru(resume_name[:-2])
+                data['question3'] = resume[10]
+                if resume[9] == 1:
+                    data["answer2"] = 1
+                    await message.answer(f"{resume[10]}", reply_markup=javobi_ru)
+                    await Registration.question3.set()
+
+                elif resume[9] == 0:
+                    data["answer2"] = 0
+                    await message.answer(f"{resume[10]}", reply_markup=javobi_ru)
+                    await Registration.question3.set()
+
+    except Exception as e:
+        await message.answer("Повторите запрос!", reply_markup=javobi_ru)
+
+@dp.message_handler(state=Registration.question3, content_types=types.ContentTypes.TEXT)
+async def russian_question3(message: types.Message, state: FSMContext):
+    try:
+        if message.text == "Да":
+            async with state.proxy() as data:
+                resume_name = data['resume_name']
+                resume = await db.get_vakansiyaru(resume_name[:-2])
+                data['question4'] = resume[12]
+                if resume[11] == 0:
+                    data["answer3"] = 1
+
+                    await message.answer(f"{resume[12]}", reply_markup=javobi_ru)
+                    await Registration.question4.set()
+
+                elif resume[11] == 1:
+                    data["answer3"] = 0
+                    await message.answer(f"{resume[12]}", reply_markup=javobi_ru)
+                    await Registration.question4.set()
+
+        elif message.text == "Нет":
+            async with state.proxy() as data:
+                resume_name = data['resume_name']
+                resume = await db.get_vakansiyaru(resume_name[:-2])
+                data['question4'] = resume[12]
+                if resume[11] == 1:
+                    data["answer3"] = 1
+                    await message.answer(f"{resume[12]}", reply_markup=javobi_ru)
+                    await Registration.question4.set()
+
+                elif resume[11] == 0:
+                    data["answer3"] = 0
+                    await message.answer(f"{resume[12]}", reply_markup=javobi_ru)
+                    await Registration.question4.set()
+
+    except Exception as e:
+        await message.answer("Повторите запрос!", reply_markup=javobi_ru)
+
+
+@dp.message_handler(state=Registration.question4, content_types=types.ContentTypes.TEXT)
+async def russian_question4(message: types.Message, state: FSMContext):
+    try:
+        if message.text == "Да" or message.text == "Нет":
+            async with state.proxy() as data:
+                resume_name = data['resume_name']
+                resume = await db.get_vakansiyaru(resume_name[:-2])
+
+                correct_answer = 1 if message.text == "Да" else 0
+
+                if resume[13] == correct_answer:
+                    data['answer4'] = 0
+                else:
+                    data['answer4'] = 1
+                await message.answer(
+                    f"За ваш ответ и терпение вас свяжутся с нашими администраторами в ближайшее время 😊",
+                    reply_markup=javobi_ru)
+                await state.finish()
+                await message.answer_location(latitude=41.2159400, longitude=69.1895840)
+                await message.answer(
+                    "Республика Узбекистан, 111802,\nг. Ташкент, Янгиҳаётcкий р-н,\nУзгариш, ул, Навруз, д. 236а")
+
+                text = f"Vakansiya: {data['resume_name']} \n1 - Savol {data['question1']} - {data['answer1']}\n2 - Savol {data['answer4']} - {data['answer2']}\n3 - Savol {data['question3']} - {data['answer3']}\n4 - Savol {data['question4']} - {data['answer4']}"
+                db.get_ball(str(message.chat.id), str(text))
+
+        else:
+            await message.answer("Нажмите еще раз !", reply_markup=asosiy_menu_ru)
+            await state.finish()
+
+    except Exception as e:
+        await message.answer(f"{e} Нажмите еще раз !", reply_markup=asosiy_menu_ru)
         await state.finish()
 
-
-@dp.message_handler(state=KondidantRu.javob1, content_types=types.ContentTypes.TEXT)
-async def vakansiya_javobi1(message: types.Message, state: FSMContext):
-    try:
-        if message.text == "Да":
-            async with state.proxy() as data:
-                vakansiya_name = data['vakansiya_name']
-                vakansiya = await db.get_vakansiyaru(vakansiya_name[:-2])
-                if vakansiya[7] == 0:
-                    data["ball"] = 1
-                    await bot.send_message(chat_id=message.chat.id, text=f"{vakansiya[8]}", reply_markup=javobi_ru)
-                    await KondidantRu.test2.set()
-
-                elif vakansiya[7] == 1:
-                    data["ball"] = 0
-                    await bot.send_message(chat_id=message.chat.id, text=f"{vakansiya[8]}", reply_markup=javobi_ru)
-                    await KondidantRu.test2.set()
-
-        elif message.text == "Нет":
-            async with state.proxy() as data:
-                vakansiya_name = data['vakansiya_name']
-                vakansiya = await db.get_vakansiyaru(vakansiya_name[:-2])
-                if vakansiya[7] == 1:
-                    data["ball"] = 1
-                    await bot.send_message(chat_id=message.chat.id, text=f"{vakansiya[8]}", reply_markup=javobi_ru)
-                    await KondidantRu.test2.set()
-
-                elif vakansiya[7] == 0:
-                    data["ball"] = 0
-                    await bot.send_message(chat_id=message.chat.id, text=f"{vakansiya[8]}", reply_markup=javobi_ru)
-                    await KondidantRu.test2.set()
-
-    except Exception as e:
-        await message.answer("Нажмите еще раз !", reply_markup=javobi_ru)
-
-
-@dp.message_handler(state=KondidantRu.test2, content_types=types.ContentTypes.TEXT)
-async def test2(message: types.Message, state: FSMContext):
-    try:
-        if message.text == "Да":
-            async with state.proxy() as data:
-                vakansiya_name = data['vakansiya_name']
-                vakansiya = await db.get_vakansiyaru(vakansiya_name[:-2])
-                if vakansiya[9] == 0:
-                    data["ball"] += 1
-
-                    await bot.send_message(chat_id=message.chat.id, text=f"{vakansiya[10]}", reply_markup=javobi_ru)
-                    await KondidantRu.test3.set()
-
-                elif vakansiya[9] == 1:
-
-                    await bot.send_message(chat_id=message.chat.id, text=f"{vakansiya[10]}", reply_markup=javobi_ru)
-                    await KondidantRu.test3.set()
-
-        elif message.text == "Нет":
-            async with state.proxy() as data:
-
-                vakansiya_name = data['vakansiya_name']
-                vakansiya = await db.get_vakansiyaru(vakansiya_name[:-2])
-                if vakansiya[9] == 1:
-                    data["ball"] += 1
-                    await bot.send_message(chat_id=message.chat.id, text=f"{vakansiya[10]}", reply_markup=javobi_ru)
-                    await KondidantRu.test3.set()
-
-                elif vakansiya[9] == 0:
-                    await bot.send_message(chat_id=message.chat.id, text=f"{vakansiya[10]}", reply_markup=javobi_ru)
-                    await KondidantRu.test3.set()
-
-    except Exception as e:
-        await message.answer("Нажмите еще раз !", reply_markup=javobi_ru)
-
-
-@dp.message_handler(state=KondidantRu.test3, content_types=types.ContentTypes.TEXT)
-async def test3(message: types.Message, state: FSMContext):
-    try:
-        if message.text == "Да":
-            async with state.proxy() as data:
-                vakansiya_name = data['vakansiya_name']
-                vakansiya = await db.get_vakansiyaru(vakansiya_name[:-2])
-                if vakansiya[11] == 0:
-                    data["ball"] += 1
-                    await bot.send_message(chat_id=message.chat.id, text=f"{vakansiya[12]}", reply_markup=javobi_ru)
-                    await KondidantRu.test4.set()
-
-                elif vakansiya[11] == 1:
-                    await bot.send_message(chat_id=message.chat.id, text=f"{vakansiya[12]}", reply_markup=javobi_ru)
-                    await KondidantRu.test4.set()
-
-        elif message.text == "Нет":
-            async with state.proxy() as data:
-                vakansiya_name = data['vakansiya_name']
-                vakansiya = await db.get_vakansiyaru(vakansiya_name[:-2])
-                if vakansiya[11] == 1:
-                    data["ball"] += 1
-                    await bot.send_message(chat_id=message.chat.id, text=f"{vakansiya[12]}", reply_markup=javobi_ru)
-                    await KondidantRu.test4.set()
-
-                elif vakansiya[11] == 0:
-                    await bot.send_message(chat_id=message.chat.id, text=f"{vakansiya[12]}", reply_markup=javobi_ru)
-                    await KondidantRu.test4.set()
-
-    except Exception as e:
-        await message.answer("Нажмите еще раз !", reply_markup=javobi_ru)
-
-
-@dp.message_handler(state=KondidantRu.test4, content_types=types.ContentTypes.TEXT)
-async def test4(message: types.Message, state: FSMContext):
-    try:
-        if message.text == "Да":
-            async with state.proxy() as data:
-                vakansiya_name = data['vakansiya_name']
-                vakansiya = await db.get_vakansiyaru(vakansiya_name[:-2])
-                if vakansiya[13] == 0:
-                    data["ball"] += 1
-
-                    await bot.send_message(chat_id=message.from_user.id,
-                                           text="Спасибо за ответ и терпение скоро с вами свяжутся наши администраторы 😊",
-                                           reply_markup=asosiy_menu_ru)
-                    await bot.send_location(chat_id=message.from_user.id, latitude=41.2159400, longitude=69.1895840)
-                    await bot.send_message(chat_id=message.from_user.id,
-                                           text="Республика Узбекистан, 111802,\nг. Ташкент, Янгиҳаётcкий р-н,\nУзгариш, ул, Навруз, д. 236а")
-                    db.get_ball(str(message.from_user.id), str(data['ball']))
-                    await state.finish()
-
-                elif vakansiya[13] == 1:
-
-                    await bot.send_message(chat_id=message.from_user.id,
-                                           text="Спасибо за ответ и терпение скоро с вами свяжутся наши администраторыi 😊",
-                                           reply_markup=asosiy_menu_ru)
-                    await bot.send_location(chat_id=message.from_user.id, latitude=41.2159400, longitude=69.1895840)
-                    await bot.send_message(chat_id=message.from_user.id,
-                                           text="Республика Узбекистан, 111802,\nг. Ташкент, Янгиҳаётcкий р-н,\nУзгариш, ул, Навруз, д. 236а")
-                    db.get_ball(str(message.from_user.id), str(data['ball']))
-                    await state.finish()
-        elif message.text == "Нет":
-            async with state.proxy() as data:
-                vakansiya_name = data['vakansiya_name']
-                vakansiya = await db.get_vakansiyaru(vakansiya_name[:-2])
-                if vakansiya[13] == 1:
-                    data["ball"] += 1
-                    await bot.send_message(chat_id=message.from_user.id,
-                                           text="Спасибо за ответ и терпение скоро с вами свяжутся наши администраторы 😊",
-                                           reply_markup=asosiy_menu_ru)
-                    await bot.send_location(chat_id=message.from_user.id, latitude=41.2159400, longitude=69.1895840)
-                    await bot.send_message(chat_id=message.from_user.id,
-                                           text="Республика Узбекистан, 111802,\nг. Ташкент, Янгиҳаётcкий р-н,\nУзгариш, ул, Навруз, д. 236а")
-                    db.get_ball(str(message.from_user.id), str(data['ball']))
-                    await state.finish()
-
-                elif vakansiya[13] == 0:
-                    await bot.send_message(chat_id=message.from_user.id,
-                                           text="Спасибо за ответ и терпение скоро с вами свяжутся наши администраторы 😊",
-                                           reply_markup=asosiy_menu_ru)
-                    await bot.send_location(chat_id=message.from_user.id, latitude=41.2159400, longitude=69.1895840)
-                    await bot.send_message(chat_id=message.from_user.id,
-                                           text="Республика Узбекистан, 111802,\nг. Ташкент, Янгиҳаётcкий р-н,\nУзгариш, ул, Навруз, д. 236а")
-                    db.get_ball(str(message.from_user.id), str(data['ball']))
-                    await state.finish()
-
-    except Exception as e:
-        await message.answer("Нажмите еще раз !", reply_markup=asosiy_menu_ru)
-        await state.finish()
 
 
 @dp.message_handler(text="Контакт ☎")
@@ -405,6 +366,10 @@ async def okompany(message: types.Message):
             await bot.send_video(chat_id=message.from_user.id, video=open(file_path, 'rb'), caption=company[1],
                                  reply_markup=website)
 
+        elif company[3] == 1:
+            await bot.send_photo(chat_id=message.from_user.id, photo=open(file_path, 'rb'), caption=company[1],
+                                 reply_markup=website)
+
     else:
         await message.answer("⌛ Нет ссылки ")
 
@@ -412,10 +377,10 @@ async def okompany(message: types.Message):
 @dp.message_handler(text="Предложения и жалобы 🗣")
 async def taklif(message: types.Message, state: FSMContext):
     await message.answer("Отправить свой номер телефона ☎", reply_markup=contact_ru)
-    await TaklifRu.telefon.set()
+    await Feedback.phone.set()
 
 
-@dp.message_handler(state=TaklifRu.telefon, content_types=types.ContentTypes.ANY)
+@dp.message_handler(state=Feedback.phone, content_types=types.ContentTypes.ANY)
 async def telefoni(message: types.Message, state: FSMContext):
     try:
         if message.contact:
@@ -424,7 +389,7 @@ async def telefoni(message: types.Message, state: FSMContext):
 
                 await message.answer("Отправьте свое предложение или жалобу на скоро рассмотрение ",
                                      reply_markup=types.ReplyKeyboardRemove())
-                await TaklifRu.about.set()
+                await Feedback.about.set()
 
         elif re.match(r'^\+998[0-9]{9}$', message.text):
             async with state.proxy() as data:
@@ -440,7 +405,7 @@ async def telefoni(message: types.Message, state: FSMContext):
             reply_markup=contact_ru)
 
 
-@dp.message_handler(state=TaklifRu.about, content_types=types.ContentTypes.TEXT)
+@dp.message_handler(state=Feedback.about, content_types=types.ContentTypes.TEXT)
 async def about(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["taklif_about"] = message.text

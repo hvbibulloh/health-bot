@@ -59,6 +59,8 @@ async def vakansiya_uz_button():
     for i in vakansiya:
         if i[4] == True:
             btn.add(f"{i[1]} 💼")
+    orqaga = KeyboardButton("Chiqish")
+    btn.add(orqaga)
     return btn
 
 

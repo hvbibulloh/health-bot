@@ -64,7 +64,7 @@ WSGI_APPLICATION = 'sozlamalar.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'lines_db',
+        'NAME': 'line_db',
         'USER': 'postgres',
         'PASSWORD': '1',
         'HOST': 'localhost',

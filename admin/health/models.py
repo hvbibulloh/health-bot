@@ -12,7 +12,7 @@ class User(models.Model):
     tajriba = models.CharField(max_length=120, verbose_name="Tajribasi")
     description = models.TextField(blank=True, null=True, verbose_name="Adminlar kiritishi uchun malumot")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Ro'yxatdan o'tgan vaqti")
-    ball = models.CharField(max_length=120, verbose_name="Testdan to'plagan bali", null=True, blank=True)
+    ball = models.TextField(verbose_name="Testdan to'plagan bali", null=True, blank=True)
 
     class Meta:
         verbose_name = "Kondinantlar"
@@ -105,7 +105,7 @@ class BizHaqimizda(models.Model):
 
     name = models.TextField(verbose_name="Malumot kiriting")
     media = models.FileField(upload_to='okompani/', verbose_name="Video yoki Rasm joylang")
-    status = models.IntegerField(choices=Answer.choices, default=Answer.HA, verbose_name="Yuqorida nima joyladingiz?")
+    status = models.IntegerField(choices=Answer.choices, default=Answer.HA, verbose_name="OPA BU YERGA ETIBOR BERING Yuqorida nima joyladingiz?")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Vaqti")
 
     class Meta:
@@ -121,7 +121,7 @@ class BizHaqimizdaRu(models.Model):
 
     name = models.TextField(verbose_name="Введите ссылку")
     media = models.FileField(upload_to='okompani/', verbose_name="Вставить видео или фото")
-    status = models.IntegerField(choices=Answer.choices, default=Answer.HA, verbose_name="Что вы разместили выше?")
+    status = models.IntegerField(choices=Answer.choices, default=Answer.HA, verbose_name="OPA BU YERGA ETIBOR BERING Что вы разместили выше?")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Время")
 
     class Meta:
